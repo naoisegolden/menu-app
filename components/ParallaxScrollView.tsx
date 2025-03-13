@@ -28,17 +28,28 @@ export default function ParallaxScrollView({
   const scrollOffset = useScrollViewOffset(scrollRef);
   const bottom = useBottomTabOverflow();
   const headerAnimatedStyle = useAnimatedStyle(() => {
+    // Define input range based on HEADER_HEIGHT
+    const inputRange = [-HEADER_HEIGHT, 0, HEADER_HEIGHT];
+
+    // Define output ranges dynamically based on HEADER_HEIGHT
+    const translateYOutputRange = [-HEADER_HEIGHT / 2, 0, HEADER_HEIGHT * 0.75];
+    const scaleOutputRange = [2, 1, 1];
+
     return {
       transform: [
         {
           translateY: interpolate(
             scrollOffset.value,
-            [-HEADER_HEIGHT, 0, HEADER_HEIGHT],
-            [-HEADER_HEIGHT / 2, 0, HEADER_HEIGHT * 0.75]
+            inputRange,
+            translateYOutputRange
           ),
         },
         {
-          scale: interpolate(scrollOffset.value, [-HEADER_HEIGHT, 0, HEADER_HEIGHT], [2, 1, 1]),
+          scale: interpolate(
+            scrollOffset.value,
+            inputRange,
+            scaleOutputRange
+          ),
         },
       ],
     };
