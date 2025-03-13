@@ -62,8 +62,12 @@ const moveDirectories = async (userInput) => {
           await fs.promises.rename(oldDirPath, newDirPath);
           console.log(`➡️ /${dir} moved to /${exampleDir}/${dir}.`);
         } else {
-          await fs.promises.rm(oldDirPath, { recursive: true, force: true });
-          console.log(`❌ /${dir} deleted.`);
+          try {
+            await fs.promises.rm(oldDirPath, { recursive: true, force: true });
+            console.log(`❌ /${dir} deleted.`);
+          } catch (err) {
+            console.error(`❌ Error deleting /${dir}: ${err.message}`);
+          }
         }
       } else {
         console.log(`➡️ /${dir} does not exist, skipping.`);
@@ -87,10 +91,9 @@ const moveDirectories = async (userInput) => {
 
     console.log("\n✅ Project reset complete. Next steps:");
     console.log(
-      `1. Run \`npx expo start\` to start a development server.\n2. Edit app/index.tsx to edit the main screen.${
-        userInput === "y"
-          ? `\n3. Delete the /${exampleDir} directory when you're done referencing it.`
-          : ""
+      `1. Run \`npx expo start\` to start a development server.\n2. Edit app/index.tsx to edit the main screen.${userInput === "y"
+        ? `\n3. Delete the /${exampleDir} directory when you're done referencing it.`
+        : ""
       }`
     );
   } catch (error) {
